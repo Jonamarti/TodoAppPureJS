@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<head>
+	<script src="script.js" type="text/javascript"></script>
+	<style src="style.css" type="text/css"> </style>
+	<script>
+		// Why do i have to write a script here in html doc and it doesnt load the fucntion
+		// defined in the src script???
+		function deleteTask(id){
+		alert(id);
+		document.getElementById(id).remove();
+		return 1;
+	}
+	</script>
+</head>
+
+<body>
+	<main>
+
+		<section>
+			<h1>
+				To Do App
+			</h1>
+
+			<div id="tasks_div">
+				<div id="task_001">
+
+					<h2>
+						This is the first task! qwe
+					</h2>
+				</div>
+
+			</div>
+
+			<div>
+				<button id="addNewTask">
+					
+
+					Add task!
+				</button>
+				
+			</div>
+		</section>
+
+	</main>
+</body>
