@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script>
+
+
+
+		function addTask() {
+			console.log(localStorage.getItem("task_id"));
+			localStorage.getItem("task_id") !== null ?
+				lastId = localStorage.getItem("task_id") :
+				lastId = 0;
+
+			localStorage.setItem("task_id", ++lastId);
+			console.log(localStorage);
+
+			event.currentTarget.submit();
+
+
+		}
+		function resize() {
+
+			var el = document.getElementById("Task_name");
+			//console.log(el.style.height="10em")
+			//el.style.width = String(el.value.length)+ "em";
+
+			// if(el.style.width > el.style.maxWidth){
+			// 	el.style.lineBreak=2+"em";
+			// }
+
+			// else if(){
+
+			// }else{
+
+			// }
+
+		}
+
+
+
+	</script>
+</head>
+
+
+<body>
+	<main>
+		<div class="app">
+			<form action="index.html" name="newTaskForm" onsubmit="{event.preventDefault();addTask()}">
+				<fieldset>
+					<legend> Task info</legend>
+					<label>Task name</label>
+					<input id="Task_name" name="TaskName" type="text" placeholder="Task name" oninput="resize()">
+					</input>
+
+
+
+					<br>
+
+
+					<label>Task date</label>
+					<input id="Task date" name="TaskDate" type="datetime-local" placeholder="Task date">
+					<br>
+
+
+
+
+					<label>Description</label>
+
+
+					<!-- <input id="Description" name="Description" type="text" placeholder="Task description"> -->
+					<textarea></textarea>
+
+
+					<br>
+					<label>Tags</label>
+					<input id="Tags" name="Tags" type="text" placeholder="Task tags">
+					<br>
+					<input type="submit" value="Add">
+				</fieldset>
+			</form>
+
+
+		</div>
+	</main>
+</body>
+
+</html>

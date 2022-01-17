@@ -1,7 +1,90 @@
-h2{
-	width:75%;
-	height:fit-content;
+* {
+	text-align: center;
+	background-color: #f9e7fa;
+	margin: auto;
+	font-family: "Comic Sans MS", "Comic Sans", cursive;
+	/* font-color: */
+}
+
+h2 {
+	width: 75%;
+	height: fit-content;
 	border-radius: 5px;
-	border-color:grey;
+	border-color: grey;
+
+}
+
+h1 {
+	margin: auto;
+	width: 75%;
+	text-align: center;
+	padding: 10px;
+	font-size: 200%;
+
+}
+
+div {
+	margin: auto;
+	padding: 15px;
+	width: 75%;
+	border: 2px solid;
+	border-radius: 5%;
+}
+
+form {
+	width: fit-content;
+	margin: auto;
+
+}
+
+fieldset {
+	border: solid 5px;
+	border-radius: 10%;
+	border-color: darkturquoise;
+}
+
+.app {
+	border-color: darkturquoise;
+}
+
+input[type=button]{
+	border-color: ghostwhite;
+}
+
+
+
+input{
+	flex:auto;
+	display:flex;
+	margin: auto;
+	min-width: 100px;
+	/* max-width: 200px; */
+	border-radius: 10px;
 	
+}
+
+input:hover {
+	background-color: lightblue;
+}
+
+input:focus{
+	background-color:lightcyan;
+}
+
+textarea{
+	
+	max-width: 50em;
+	/* height: 1em; */
+	display:flex;
+	margin: auto;
+	min-width: 100px;
+	/* max-width: 200px; */
+	border-radius: 10px;
+	resize:none
+}
+textarea:hover{
+	background-color: lightblue;
+}
+textarea:focus{
+	background-color:lightcyan;
 }
