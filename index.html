@@ -8,6 +8,15 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 	</link>
 	<script>
+
+		window.onload = function () {
+
+			//loadJSONtasks();
+			displayJSONtasks(loadJSONtasks())
+			//alert(loadJSONtasks());
+		}
+
+
 		var id = 0;
 		// Why do i have to write a script here in html doc and it doesnt load the fucntion
 		// defined in the src script???
@@ -15,6 +24,9 @@
 			document.getElementById(id).remove();
 			return;
 		}
+
+
+
 
 		function addTask() {
 
@@ -42,24 +54,55 @@
 		}
 
 		function loadJSONtasks() {
-			/*
-			import { tasks } from "tasks.json";
-			*/
+			// returns a promise object
 
+			return fetch("/tasks.json")
+				.then(response => {
+					if (!response.ok) {
+						throw new Error("HTTP error " + response.status);
+					}
+					return response.json();
+				})
+				//.then(json => taskContainer = json) // not needed ?
+				.catch(error => {
+					/* Error handling */
+					console.log(error)
+				});
 
-			var tasks = [];
-			fetch("/tasks.json")
-				.then(response => response.json())
-				.then(json => { json["tasks"].map(task => tasks.push(task)) })
-			// .catch(error => {
-			// 	/* Error handling */
-			// 	console.log(error)
-			// });
+			//console.dir("tasks:", JSON.parse(JSON.stringify(tasks)));
 
-			console.dir("tasks:", tasks);
-			return tasks;
 		}
-		console.dir(loadJSONtasks());
+
+		// function displayJSONtasks(PromiseData) {
+		// 	console.log(PromiseData);
+		// 	alert(typeof (PromiseData.value))
+		// }
+
+		async function displayJSONtasks(){
+			let result = await loadJSONtasks();
+			let tasks = result["tasks"];
+			let divTasks = document.getElementById("new_task_div");
+			tasks.forEach((task)=>{console.log(task);divTasks.innerHTML+=(`<div><p>Task id: ${task["id"]}, 
+				task Name: ${task["title"]}, date: ${task["date"]}, 
+				description: ${task["description"]} 
+				 </p></div>`)});
+
+	
+			// divTasks.innerHTML+=(`<p>Task id: ${tasks[0]["id"]}, 
+			// 	task Name: ${tasks[0]["title"]}, date: ${tasks[0]["date"]}, 
+			// 	description: ${tasks[0]["description"]} 
+			// 	 </p>`);
+			// console.log(result);
+			// console.log(result["tasks"][0])
+			return;
+		}
+
+		
+		// async function doSomething() {
+		// 	let result = await functionThatReturnsPromiseA();
+		// 	return result + 1;
+		// }
+
 
 	</script>
 </head>
@@ -79,14 +122,9 @@
 
 				<div id="new_task_div">
 
-					<input type="text" id="new_task_input">
 
-					<!--  
-						<button id="addNewTask" onclick="addTask()">
 
-						Add task!
-					</button> 
-				-->
+
 					<a href="newTask.html">
 						<input type="button" value="Add task" />
 					</a>
