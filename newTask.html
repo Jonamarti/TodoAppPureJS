@@ -6,35 +6,82 @@
 	<script>
 
 
+		function getJSONtasks() {
+			// returns a promise object
 
-		function addTask() {
-			console.log(localStorage.getItem("task_id"));
-			localStorage.getItem("task_id") !== null ?
-				lastId = localStorage.getItem("task_id") :
-				lastId = 0;
+			return fetch("/tasks.json")
+				.then(response => {
+					if (!response.ok) {
+						throw new Error("HTTP error " + response.status);
+					}
+					return response.json();
+				})
+				//.then(json => taskContainer = json) // not needed ?
+				.catch(error => {
+					/* Error handling */
+					console.log(error)
+				});
 
-			localStorage.setItem("task_id", ++lastId);
-			console.log(localStorage);
-
-			event.currentTarget.submit();
 
 
 		}
-		function resize() {
 
-			var el = document.getElementById("Task_name");
-			//console.log(el.style.height="10em")
-			//el.style.width = String(el.value.length)+ "em";
+		
+		/**
+			 * @param promise result
+			 * This method saves json tasks in local storage
+			 * metadata is erased when parsing it 
+			 * 
+			 * */
+		async function tolocalStorageJSONtasks(task) {
+			console.log(task)
+			let result = await getJSONtasks();
+			let tasks = result["tasks"];
+			tasks.push(task);
+			localStorage.setItem(
+				"tasks", JSON.stringify(tasks)
+			)
+		}
 
-			// if(el.style.width > el.style.maxWidth){
-			// 	el.style.lineBreak=2+"em";
-			// }
 
-			// else if(){
+		/**
+		 * This method loads json tasks from local storage
+		 * returns: Array with task objects inside
+		 * */
+		function fromlocalStorageJSONtasks() {
+			let tasks = JSON.parse(localStorage.getItem("tasks"));
+			return tasks;
+		}
 
-			// }else{
+		function tasksToJSONFile(tasks){
+			
+		}
 
-			// }
+		function addTask() {
+
+
+			taskNumber = JSON.parse(localStorage["tasks"]).length;
+			title = document.getElementById("Task_title").value;
+			init_date = document.getElementById("Task_init_date").value;
+			end_date = document.getElementById("Task_end_date").value;
+			tags = document.getElementById("Task_tags").value;
+			description = document.getElementById("Task_description").value;
+
+			new_task = {
+				"id": taskNumber-1,
+				"title": title,
+				"init_date": init_date,
+				"end_date": end_date,
+				"description": description,
+				"attachments": {}
+			}
+			
+			tolocalStorageJSONtasks(new_task);
+		
+			tasksToJSONFile();
+
+			event.currentTarget.submit();
+
 
 		}
 
@@ -51,32 +98,32 @@
 				<fieldset>
 					<legend> Task info</legend>
 					<label>Task name</label>
-					<input id="Task_name" name="TaskName" type="text" placeholder="Task name" oninput="resize()">
+					<input id="Task_title" name="TaskTitle" type="text" placeholder="Task name" 
+					>
 					</input>
 
-
-
 					<br>
 
-
-					<label>Task date</label>
-					<input id="Task date" name="TaskDate" type="datetime-local" placeholder="Task date">
+					<label>Task initial date</label>
+					<input id="Task_init_date" name="TaskInitDate" type="datetime-local" min="2022-01-07T00:00">
 					<br>
-
-
-
+					<!-- TODO check if min of end date is later than init -->
+					<label>Task end date</label>
+					<input id="Task_end_date" name="TaskEndDate" type="datetime-local" min="2018-06-07T00:00">
+					<br>
 
 					<label>Description</label>
 
 
 					<!-- <input id="Description" name="Description" type="text" placeholder="Task description"> -->
-					<textarea></textarea>
+					<textarea name="description" id="Task_description"></textarea>
 
 
 					<br>
 					<label>Tags</label>
-					<input id="Tags" name="Tags" type="text" placeholder="Task tags">
+					<input id="Task_tags" name="Tags" type="text" placeholder="Task tags">
 					<br>
+
 					<input type="submit" value="Add">
 				</fieldset>
 			</form>

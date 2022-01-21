@@ -2,22 +2,36 @@
 <html>
 
 <head>
-	<title>My Page Title</title>
+	<title>To Do App</title>
+	<!-- Meta-->
+	<meta charset="UTF-8">
+	<meta name="description" content="To Do App in vanilla Javascript">
+	<meta name="keywords" content="HTML, CSS, JavaScript">
+	<meta name="Jon">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Links -->
 	<link rel="shortcut-icon" type="image/x-icon" href="favicon.ico">
-	<script src="script.js" type="text/javascript"></script>
+
 	<link rel="stylesheet" type="text/css" href="style.css">
-	</link>
+
+	<noscript>This page needs JavaScript enabled to work</noscript>
+
+
 	<script>
 
 		window.onload = function () {
 
+			tolocalStorageJSONtasks();
+			//fromlocalStorageJSONtasks();
 			//loadJSONtasks();
-			displayJSONtasks(loadJSONtasks())
+			//displayJSONtasks(loadJSONtasks()) // TODO try catch
+			displayJSONtasks(fromlocalStorageJSONtasks());
+
 			//alert(loadJSONtasks());
 		}
 
-
-		var id = 0;
+		
 		// Why do i have to write a script here in html doc and it doesnt load the fucntion
 		// defined in the src script???
 		function deleteTask(id) {
@@ -31,29 +45,9 @@
 		function addTask() {
 
 
-
-			/*
-			// alert("caling addtask")
-			let new_task_input = document.getElementById("new_task_input").value;
-			// alert(new_task_input);
-			let newTask = `<h2 id=${id}> <p>Task number ${id}: ${new_task_input} 
-		<button class="deleteButt" 
-		onClick="{deleteTask(${id})}"
-		>
-		Delete this task
-		</button>
-		</p> 
-		</h2>`;
-			id += 1;
-
-			document.getElementById("tasks_div").innerHTML += newTask;
-			return;
-
-
-			*/
 		}
 
-		function loadJSONtasks() {
+		function getJSONtasksFromFile() {
 			// returns a promise object
 
 			return fetch("/tasks.json")
@@ -69,46 +63,119 @@
 					console.log(error)
 				});
 
-			//console.dir("tasks:", JSON.parse(JSON.stringify(tasks)));
+
 
 		}
 
-		// function displayJSONtasks(PromiseData) {
-		// 	console.log(PromiseData);
-		// 	alert(typeof (PromiseData.value))
-		// }
 
-		async function displayJSONtasks(){
-			let result = await loadJSONtasks();
+		/**
+		 * @param promise result
+		 * This method saves json tasks in local storage
+		 * metadata is erased when parsing it 
+		 * 
+		 * */
+		async function tolocalStorageJSONtasks() {
+			let result = await getJSONtasksFromFile();
 			let tasks = result["tasks"];
-			let divTasks = document.getElementById("new_task_div");
-			tasks.forEach((task)=>{console.log(task);divTasks.innerHTML+=(`<div><p>Task id: ${task["id"]}, 
-				task Name: ${task["title"]}, date: ${task["date"]}, 
-				description: ${task["description"]} 
-				 </p></div>`)});
 
-	
-			// divTasks.innerHTML+=(`<p>Task id: ${tasks[0]["id"]}, 
-			// 	task Name: ${tasks[0]["title"]}, date: ${tasks[0]["date"]}, 
-			// 	description: ${tasks[0]["description"]} 
-			// 	 </p>`);
+			localStorage.setItem("tasks", JSON.stringify(tasks))
+
+			/*
+			console.log("localStorage: ");
+			console.log(localStorage);
+			console.log(JSON.parse(localStorage.getItem("tasks")))
+			*/
+			//console.log(JSON.parse(localStorage.getItem("task_2")))
+
+		}
+
+
+		/**
+		 * This method loads json tasks from local storage
+		 * returns: Array with task objects inside
+		 * */
+		function fromlocalStorageJSONtasks() {
+			let tasks = JSON.parse(localStorage.getItem("tasks"));
+			return tasks;
+		}
+
+
+		/**
+		 * 
+		 * */
+		function displayJSONtasks(taskArray) {
+
+			let divTasks = document.getElementById("new_task_div");
+			taskArray.forEach((task) => {
+				divTasks.innerHTML += `<div class="task">
+			<p id=task_${task["id"]}>
+				<b> ${task["title"]}</b><br> ` +
+
+					(task["end_date"] == "" ?
+						`${task["init_date"]}` :
+						`${task["init_date"]} - ${task["end_date"]}`) // if end date null, just init date
+
+					+ `<br>
+				
+				${task["description"]}
+			</p>
+			<button>X</button><button>Edit</button>
+		</div > `
+			});
+
+
+			// divTasks.innerHTML+=(`< p > Task id: ${ tasks[0]["id"] },
+			// task Name: ${tasks[0]["title"]}, date: ${tasks[0]["date"]},
+			// description: ${tasks[0]["description"]}
+			// </p>`);
 			// console.log(result);
 			// console.log(result["tasks"][0])
 			return;
 		}
 
-		
+
+
+
 		// async function doSomething() {
-		// 	let result = await functionThatReturnsPromiseA();
-		// 	return result + 1;
+		// let result = await functionThatReturnsPromiseA();
+		// return result + 1;
 		// }
 
+
+		function sidebar_open() {
+			document.getElementById("mySidebar").style.display = "block";
+			document.getElementById("myOverlay").style.display = "block";
+		}
+
+		function sidebar_close() {
+			document.getElementById("mySidebar").style.display = "none";
+			document.getElementById("myOverlay").style.display = "none";
+		}
 
 	</script>
 </head>
 
 <body>
+
+	<!-- Sidebar -->
+	<div class="sidebar" style="display:none;z-index:5" id="mySidebar">
+		<button class="w3-bar-item w3-button w3-xxlarge" onclick="sidebar_close()">Close &times;</button>
+
+		<a href="newTask.html" class="w3-bar-item w3-button">Add new task</a>
+		<!--
+		<a href="#" class="w3-bar-item w3-button">Link 2</a>
+		<a href="#" class="w3-bar-item w3-button">Link 3</a>
+		-->
+	</div>
+
+
+	<!-- Page content-->
 	<main>
+
+		<button class="w3-button w3-white w3-xxlarge" id="sideBut" onclick="sidebar_open()">☰
+		</button>
+
+		<div class="overlay" onclick="sidebar_close()" id="myOverlay"></div>
 
 		<section>
 			<h1>
@@ -119,23 +186,25 @@
 
 
 
-
 				<div id="new_task_div">
-
-
-
-
-					<a href="newTask.html">
-						<input type="button" value="Add task" />
-					</a>
-
 
 				</div>
 
+
+				<div id="options">
+
+					<input type="button" value="Load from file" onclick="loadFromFile()" >Load from file</input>
+
+
+				</div>
 			</div>
 		</section>
 
 	</main>
+
+
+	<!--- Footer -->
+	<footer></footer>
 </body>
 
 </html>

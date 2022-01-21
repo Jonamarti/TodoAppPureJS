@@ -1,0 +1,38 @@
+{
+	"tasks": [
+		{
+			"id": 0,
+			"title": "Hacer la cama",
+			"init_date": "2009-09-22 00:00:00",
+			"end_date":"2009-09-22 01:00:00",
+			"description": "Lo primero al despertarse",
+			"attachments":{}
+		},
+		{
+			"id": 1,
+			"title": "Ducharse",
+			"init_date": "2009-09-22 00:00:00",
+			"end_date":"",
+			"description": "Lo segundo al despertarse",
+			"attachments":{}
+		},
+		{
+			"id": 2,
+			"title": "El cafecico",
+			"init_date": "2009-09-22 00:00:00",
+			"end_date":"2009-09-22 01:00:00",
+			"description": "Para ser persona",
+			"attachments":{}
+		},
+		{
+			"id": 3,
+			"title": "La cancioncita motivadora",
+			"init_date": "2009-09-22 00:00:00",
+			"end_date":"2009-09-22 01:00:00",
+			"description": "Para estar al 100%",
+			"attachments":{}
+		}
+		
+	]
+	
+}

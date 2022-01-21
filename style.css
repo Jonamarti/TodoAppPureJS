@@ -47,44 +47,100 @@ fieldset {
 	border-color: darkturquoise;
 }
 
-input[type=button]{
+
+.task {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+input[type=button] {
 	border-color: ghostwhite;
 }
 
 
 
-input{
-	flex:auto;
-	display:flex;
+input {
+	flex: auto;
+	display: flex;
 	margin: auto;
 	min-width: 100px;
 	/* max-width: 200px; */
 	border-radius: 10px;
-	
+
 }
 
 input:hover {
 	background-color: lightblue;
 }
 
-input:focus{
-	background-color:lightcyan;
+input:focus {
+	background-color: lightcyan;
 }
 
-textarea{
-	
+textarea {
+
 	max-width: 50em;
 	/* height: 1em; */
-	display:flex;
+	display: flex;
 	margin: auto;
 	min-width: 100px;
 	/* max-width: 200px; */
 	border-radius: 10px;
-	resize:none
+	resize: none
 }
-textarea:hover{
+
+textarea:hover {
 	background-color: lightblue;
 }
-textarea:focus{
-	background-color:lightcyan;
+
+textarea:focus {
+	background-color: lightcyan;
+}
+
+
+button, [type=button], [type=reset], [type=submit] {
+	-webkit-appearance: button;
+}
+
+#sideBut {
+	font-size: 36px !important;
+	border: none;
+
+	padding: 8px 16px;
+
+	overflow: hidden;
+	text-decoration: none;
+	text-align: center;
+	cursor: pointer;
+	white-space: nowrap;
+	float: left;
+}
+
+#sideBut:hover {
+	color: #000 !important;
+	background-color: #fff !important;
+}
+
+.sidebar {
+	position: fixed !important;
+	height: 100%;
+	width: 200px;
+	background-color: #fff;
+}
+
+.overlay {
+	cursor:pointer;
+	display:none;
+	position: fixed;
+	display: none;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 2;
 }
