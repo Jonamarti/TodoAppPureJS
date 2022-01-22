@@ -7,7 +7,6 @@
 	<meta charset="UTF-8">
 	<meta name="description" content="To Do App in vanilla Javascript">
 	<meta name="keywords" content="HTML, CSS, JavaScript">
-	<meta name="Jon">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<!-- Links -->
@@ -22,39 +21,55 @@
 
 		window.onload = function () {
 
-			tolocalStorageJSONtasks();
-			//fromlocalStorageJSONtasks();
-			//loadJSONtasks();
-			//displayJSONtasks(loadJSONtasks()) // TODO try catch
-			displayJSONtasks(fromlocalStorageJSONtasks());
+			//Check if tasks in local storage- else load from file, 
+			//then display
+			if (localStorage["tasks"] === undefined) {
+				tolocalStorageJSONtasks();
+			}
 
-			//alert(loadJSONtasks());
+			displayJSONtasks(fromlocalStorageJSONtasks());
 		}
 
-		
+
 		// Why do i have to write a script here in html doc and it doesnt load the fucntion
 		// defined in the src script???
 		function deleteTask(id) {
-			document.getElementById(id).remove();
+
+			// delete from localstorage
+			tasks = fromlocalStorageJSONtasks(); // array
+
+			// delete tasks[id];
+			// delete JSON.parse(tasks
+			for (let i = 0; i < tasks.length; i++) {
+				if (tasks[i]["id"] == id) {
+					delete tasks[i];
+					break;
+				}
+			}
+			tasks = tasks.filter(x => x)
+
+			localStorage.setItem("tasks", JSON.stringify(tasks));
+
+
+			// delete from DOM
+			document.getElementById(`task_${id}`).remove();
 			return;
 		}
 
-
-
-
-		function addTask() {
-
-
-		}
-
-		function getJSONtasksFromFile() {
+		/**
+		 * returns a promise object
+		 *
+		*/
+		async function getJSONtasksFromFile() {
 			// returns a promise object
 
 			return fetch("/tasks.json")
 				.then(response => {
+
 					if (!response.ok) {
 						throw new Error("HTTP error " + response.status);
 					}
+
 					return response.json();
 				})
 				//.then(json => taskContainer = json) // not needed ?
@@ -63,10 +78,7 @@
 					console.log(error)
 				});
 
-
-
 		}
-
 
 		/**
 		 * @param promise result
@@ -74,7 +86,7 @@
 		 * metadata is erased when parsing it 
 		 * 
 		 * */
-		async function tolocalStorageJSONtasks() {
+		async function tolocalStorageJSONtasks() { // from get from file
 			let result = await getJSONtasksFromFile();
 			let tasks = result["tasks"];
 
@@ -103,12 +115,13 @@
 		/**
 		 * 
 		 * */
-		function displayJSONtasks(taskArray) {
+		async function displayJSONtasks(taskArray) {
 
+			//let taskArray = await fromlocalStorageJSONtasks();
 			let divTasks = document.getElementById("new_task_div");
 			taskArray.forEach((task) => {
-				divTasks.innerHTML += `<div class="task">
-			<p id=task_${task["id"]}>
+				divTasks.innerHTML += `<div class="task" id=task_${task["id"]}>
+			<p >
 				<b> ${task["title"]}</b><br> ` +
 
 					(task["end_date"] == "" ?
@@ -119,27 +132,12 @@
 				
 				${task["description"]}
 			</p>
-			<button>X</button><button>Edit</button>
+			<button onclick="deleteTask(${task["id"]})">X</button><button>Edit</button>
 		</div > `
 			});
 
-
-			// divTasks.innerHTML+=(`< p > Task id: ${ tasks[0]["id"] },
-			// task Name: ${tasks[0]["title"]}, date: ${tasks[0]["date"]},
-			// description: ${tasks[0]["description"]}
-			// </p>`);
-			// console.log(result);
-			// console.log(result["tasks"][0])
 			return;
 		}
-
-
-
-
-		// async function doSomething() {
-		// let result = await functionThatReturnsPromiseA();
-		// return result + 1;
-		// }
 
 
 		function sidebar_open() {
@@ -162,17 +160,15 @@
 		<button class="w3-bar-item w3-button w3-xxlarge" onclick="sidebar_close()">Close &times;</button>
 
 		<a href="newTask.html" class="w3-bar-item w3-button">Add new task</a>
-		<!--
-		<a href="#" class="w3-bar-item w3-button">Link 2</a>
-		<a href="#" class="w3-bar-item w3-button">Link 3</a>
-		-->
+
 	</div>
 
 
 	<!-- Page content-->
 	<main>
 
-		<button class="w3-button w3-white w3-xxlarge" id="sideBut" onclick="sidebar_open()">☰
+		<button class="w3-button w3-white w3-xxlarge" id="sideBut" onclick="sidebar_open()">
+			☰
 		</button>
 
 		<div class="overlay" onclick="sidebar_close()" id="myOverlay"></div>
@@ -184,17 +180,7 @@
 
 			<div id="tasks_div" class="app">
 
-
-
 				<div id="new_task_div">
-
-				</div>
-
-
-				<div id="options">
-
-					<input type="button" value="Load from file" onclick="loadFromFile()" >Load from file</input>
-
 
 				</div>
 			</div>
@@ -204,7 +190,9 @@
 
 
 	<!--- Footer -->
-	<footer></footer>
+	<footer>
+
+	</footer>
 </body>
 
 </html>

@@ -1,46 +1,50 @@
 <!DOCTYPE html>
 <html>
+<meta charset="UTF-8">
+<meta name="description" content="To Do App in vanilla Javascript, add task">
+<meta name="keywords" content="HTML, CSS, JavaScript">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <head>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script>
 
-
-		function getJSONtasks() {
-			// returns a promise object
-
-			return fetch("/tasks.json")
-				.then(response => {
-					if (!response.ok) {
-						throw new Error("HTTP error " + response.status);
-					}
-					return response.json();
-				})
-				//.then(json => taskContainer = json) // not needed ?
-				.catch(error => {
-					/* Error handling */
-					console.log(error)
-				});
-
-
-
-		}
-
 		
+		// function getJSONtasks() {
+		// 	// returns a promise object
+
+		// 	return fetch("/tasks.json")
+		// 		.then(response => {
+		// 			if (!response.ok) {
+		// 				throw new Error("HTTP error " + response.status);
+		// 			}
+		// 			return response.json();
+		// 		})
+		// 		//.then(json => taskContainer = json) // not needed ?
+		// 		.catch(error => {
+		// 			/* Error handling */
+		// 			console.log(error)
+		// 		});
+
+		// }
+
+
 		/**
-			 * @param promise result
+			 * @param task object
 			 * This method saves json tasks in local storage
-			 * metadata is erased when parsing it 
 			 * 
 			 * */
 		async function tolocalStorageJSONtasks(task) {
-			console.log(task)
-			let result = await getJSONtasks();
-			let tasks = result["tasks"];
-			tasks.push(task);
+			tasks = localStorage.getItem("tasks");
+			// console.log(typeof(tasks)) // string 
+			// JSON.parse(task).push(task);
+			tasksj = JSON.parse(tasks);
+			
+			tasksj[tasksj.length]=task;
 			localStorage.setItem(
-				"tasks", JSON.stringify(tasks)
+				"tasks", JSON.stringify(tasksj)
 			)
+			
 		}
 
 
@@ -53,14 +57,24 @@
 			return tasks;
 		}
 
-		function tasksToJSONFile(tasks){
-			
-		}
+
 
 		function addTask() {
 
 
-			taskNumber = JSON.parse(localStorage["tasks"]).length;
+			// taskNumber = JSON.parse(localStorage["tasks"]).length; This would give an error, as when 
+			//deleting element and adding a new one tasknumber would override the last task
+			try{
+				taskNumber = JSON.parse(localStorage["tasks"]).at(-1)["id"]; 
+			}catch(TypeError){
+				console.log("Type error");
+				taskNumber = -1;
+			}
+
+			// TODO refactor error -> if empty, task number = 0
+
+
+			
 			title = document.getElementById("Task_title").value;
 			init_date = document.getElementById("Task_init_date").value;
 			end_date = document.getElementById("Task_end_date").value;
@@ -68,20 +82,18 @@
 			description = document.getElementById("Task_description").value;
 
 			new_task = {
-				"id": taskNumber-1,
+				"id": taskNumber +1,
 				"title": title,
 				"init_date": init_date,
 				"end_date": end_date,
 				"description": description,
 				"attachments": {}
 			}
-			
+
 			tolocalStorageJSONtasks(new_task);
-		
-			tasksToJSONFile();
 
 			event.currentTarget.submit();
-
+			
 
 		}
 
@@ -98,8 +110,7 @@
 				<fieldset>
 					<legend> Task info</legend>
 					<label>Task name</label>
-					<input id="Task_title" name="TaskTitle" type="text" placeholder="Task name" 
-					>
+					<input id="Task_title" name="TaskTitle" type="text" placeholder="Task name">
 					</input>
 
 					<br>
