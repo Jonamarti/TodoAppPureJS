@@ -23,60 +23,68 @@
 
 			//Check if tasks in local storage- else load from file, 
 			//then display
-			if (localStorage["tasks"] === undefined) {
-				tolocalStorageJSONtasks();
-			}
+			// if (localStorage["tasks"] === undefined) {
+			// 	tolocalStorageJSONtasks();
+			// }
 
-			displayJSONtasks(fromlocalStorageJSONtasks());
+
+			// displayJSONtasks(fromlocalStorageJSONtasks());
 		}
 
 
 		// Why do i have to write a script here in html doc and it doesnt load the fucntion
 		// defined in the src script???
-		function deleteTask(id) {
+		// function deleteTask(id) {
 
-			// delete from localstorage
-			tasks = fromlocalStorageJSONtasks(); // array
+		// 	// delete from localstorage
+		// 	tasks = fromlocalStorageJSONtasks(); // array
 
-			// delete tasks[id];
-			// delete JSON.parse(tasks
-			for (let i = 0; i < tasks.length; i++) {
-				if (tasks[i]["id"] == id) {
-					delete tasks[i];
-					break;
-				}
-			}
-			tasks = tasks.filter(x => x)
+		// 	// delete tasks[id];
+		// 	// delete JSON.parse(tasks
+		// 	for (let i = 0; i < tasks.length; i++) {
+		// 		if (tasks[i]["id"] == id) {
+		// 			delete tasks[i];
+		// 			break;
+		// 		}
+		// 	}
+		// 	tasks = tasks.filter(x => x)
 
-			localStorage.setItem("tasks", JSON.stringify(tasks));
+		// 	localStorage.setItem("tasks", JSON.stringify(tasks));
 
 
-			// delete from DOM
-			document.getElementById(`task_${id}`).remove();
-			return;
-		}
+		// 	// delete from DOM
+		// 	document.getElementById(`task_${id}`).remove();
+		// 	return;
+		// }
 
 		/**
 		 * returns a promise object
 		 *
 		*/
+		// async function getJSONtasksFromFile() {
+		// 	// returns a promise object
+
+		// 	return fetch("/tasks.json")
+		// 		.then(response => {
+
+		// 			if (!response.ok) {
+		// 				throw new Error("HTTP error " + response.status);
+		// 			}
+
+		// 			return response.json();
+		// 		})
+		// 		//.then(json => taskContainer = json) // not needed ?
+		// 		.catch(error => {
+		// 			/* Error handling */
+		// 			console.log(error)
+		// 		});
+
+		// }
+
 		async function getJSONtasksFromFile() {
-			// returns a promise object
+			console.log("getJSONtasksFromFile")
 
-			return fetch("/tasks.json")
-				.then(response => {
-
-					if (!response.ok) {
-						throw new Error("HTTP error " + response.status);
-					}
-
-					return response.json();
-				})
-				//.then(json => taskContainer = json) // not needed ?
-				.catch(error => {
-					/* Error handling */
-					console.log(error)
-				});
+			var loadInp = document.getElementById("loadTasksInput"); return loadInp.files[0].text().then(response => { return response })
 
 		}
 
@@ -88,19 +96,12 @@
 		 * */
 		async function tolocalStorageJSONtasks() { // from get from file
 			let result = await getJSONtasksFromFile();
+			result = JSON.parse(result);
 			let tasks = result["tasks"];
 
 			localStorage.setItem("tasks", JSON.stringify(tasks))
 
-			/*
-			console.log("localStorage: ");
-			console.log(localStorage);
-			console.log(JSON.parse(localStorage.getItem("tasks")))
-			*/
-			//console.log(JSON.parse(localStorage.getItem("task_2")))
-
 		}
-
 
 		/**
 		 * This method loads json tasks from local storage
@@ -115,28 +116,31 @@
 		/**
 		 * 
 		 * */
-		async function displayJSONtasks(taskArray) {
-
-			//let taskArray = await fromlocalStorageJSONtasks();
-			let divTasks = document.getElementById("new_task_div");
-			taskArray.forEach((task) => {
-				divTasks.innerHTML += `<div class="task" id=task_${task["id"]}>
+		async function displayJSONtasks() {
+			try {
+				let taskArray = await fromlocalStorageJSONtasks();
+				let divTasks = document.getElementById("new_task_div");
+				taskArray.forEach((task) => {
+					divTasks.innerHTML += `<div class="task" id=task_${task["id"]}>
 			<p >
 				<b> ${task["title"]}</b><br> ` +
 
-					(task["end_date"] == "" ?
-						`${task["init_date"]}` :
-						`${task["init_date"]} - ${task["end_date"]}`) // if end date null, just init date
+						(task["end_date"] == "" ?
+							`${task["init_date"]}` :
+							`${task["init_date"]} - ${task["end_date"]}`) // if end date null, just init date
 
-					+ `<br>
+						+ `<br>
 				
 				${task["description"]}
 			</p>
 			<button onclick="deleteTask(${task["id"]})">X</button><button>Edit</button>
 		</div > `
-			});
-
-			return;
+				});
+				return 1;
+			} catch (error) {
+				console.log(error);
+				return 0;
+			}
 		}
 
 
@@ -185,6 +189,12 @@
 				</div>
 			</div>
 		</section>
+
+		<div id="loadTasksDiv">
+			It seems you have no tasks loaded. Please select a file to load from.
+			<input type="file" id="loadTasksInput" onchange="tolocalStorageJSONtasks();a = displayJSONtasks(); if(a){document.getElementById('loadTasksDiv').style.display='none'}"
+				accept=".json">
+		</div>
 
 	</main>
 

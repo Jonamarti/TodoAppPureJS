@@ -144,3 +144,8 @@ button, [type=button], [type=reset], [type=submit] {
 	background-color: rgba(0, 0, 0, 0.5);
 	z-index: 2;
 }
+
+#loadTasksDiv{
+	display:block;
+	margin-top:1%;
+}
