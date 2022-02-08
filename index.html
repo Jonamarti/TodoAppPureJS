@@ -8,7 +8,7 @@
 	<meta name="description" content="To Do App in vanilla Javascript">
 	<meta name="keywords" content="HTML, CSS, JavaScript">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+	<script src="script.js" type="text/javascript"></script>
 	<!-- Links -->
 	<link rel="shortcut-icon" type="image/x-icon" href="favicon.ico">
 
@@ -16,145 +16,6 @@
 
 	<noscript>This page needs JavaScript enabled to work</noscript>
 
-
-	<script>
-
-		window.onload = function () {
-
-			//Check if tasks in local storage- else load from file, 
-			//then display
-			// if (localStorage["tasks"] === undefined) {
-			// 	tolocalStorageJSONtasks();
-			// }
-
-
-			// displayJSONtasks(fromlocalStorageJSONtasks());
-		}
-
-
-		// Why do i have to write a script here in html doc and it doesnt load the fucntion
-		// defined in the src script???
-		// function deleteTask(id) {
-
-		// 	// delete from localstorage
-		// 	tasks = fromlocalStorageJSONtasks(); // array
-
-		// 	// delete tasks[id];
-		// 	// delete JSON.parse(tasks
-		// 	for (let i = 0; i < tasks.length; i++) {
-		// 		if (tasks[i]["id"] == id) {
-		// 			delete tasks[i];
-		// 			break;
-		// 		}
-		// 	}
-		// 	tasks = tasks.filter(x => x)
-
-		// 	localStorage.setItem("tasks", JSON.stringify(tasks));
-
-
-		// 	// delete from DOM
-		// 	document.getElementById(`task_${id}`).remove();
-		// 	return;
-		// }
-
-		/**
-		 * returns a promise object
-		 *
-		*/
-		// async function getJSONtasksFromFile() {
-		// 	// returns a promise object
-
-		// 	return fetch("/tasks.json")
-		// 		.then(response => {
-
-		// 			if (!response.ok) {
-		// 				throw new Error("HTTP error " + response.status);
-		// 			}
-
-		// 			return response.json();
-		// 		})
-		// 		//.then(json => taskContainer = json) // not needed ?
-		// 		.catch(error => {
-		// 			/* Error handling */
-		// 			console.log(error)
-		// 		});
-
-		// }
-
-		async function getJSONtasksFromFile() {
-			console.log("getJSONtasksFromFile")
-
-			var loadInp = document.getElementById("loadTasksInput"); return loadInp.files[0].text().then(response => { return response })
-
-		}
-
-		/**
-		 * @param promise result
-		 * This method saves json tasks in local storage
-		 * metadata is erased when parsing it 
-		 * 
-		 * */
-		async function tolocalStorageJSONtasks() { // from get from file
-			let result = await getJSONtasksFromFile();
-			result = JSON.parse(result);
-			let tasks = result["tasks"];
-
-			localStorage.setItem("tasks", JSON.stringify(tasks))
-
-		}
-
-		/**
-		 * This method loads json tasks from local storage
-		 * returns: Array with task objects inside
-		 * */
-		function fromlocalStorageJSONtasks() {
-			let tasks = JSON.parse(localStorage.getItem("tasks"));
-			return tasks;
-		}
-
-
-		/**
-		 * 
-		 * */
-		async function displayJSONtasks() {
-			try {
-				let taskArray = await fromlocalStorageJSONtasks();
-				let divTasks = document.getElementById("new_task_div");
-				taskArray.forEach((task) => {
-					divTasks.innerHTML += `<div class="task" id=task_${task["id"]}>
-			<p >
-				<b> ${task["title"]}</b><br> ` +
-
-						(task["end_date"] == "" ?
-							`${task["init_date"]}` :
-							`${task["init_date"]} - ${task["end_date"]}`) // if end date null, just init date
-
-						+ `<br>
-				
-				${task["description"]}
-			</p>
-			<button onclick="deleteTask(${task["id"]})">X</button><button>Edit</button>
-		</div > `
-				});
-				return 1;
-			} catch (error) {
-				console.log(error);
-				return 0;
-			}
-		}
-
-
-		function sidebar_open() {
-			document.getElementById("mySidebar").style.display = "block";
-			document.getElementById("myOverlay").style.display = "block";
-		}
-
-		function sidebar_close() {
-			document.getElementById("mySidebar").style.display = "none";
-			document.getElementById("myOverlay").style.display = "none";
-		}
-
-	</script>
 </head>
 
 <body>
@@ -163,8 +24,9 @@
 	<div class="sidebar" style="display:none;z-index:5" id="mySidebar">
 		<button class="w3-bar-item w3-button w3-xxlarge" onclick="sidebar_close()">Close &times;</button>
 
-		<a href="newTask.html" class="w3-bar-item w3-button">Add new task</a>
-
+		<br>
+		<!-- <a href="newTask.html" class="w3-bar-item w3-button">Add new task</a> -->
+		<button id="openAddNewTaskButton" onclick="document.getElementById('addTaskDiv').style.display='block'"> Add new task </button>
 	</div>
 
 
@@ -192,8 +54,88 @@
 
 		<div id="loadTasksDiv">
 			It seems you have no tasks loaded. Please select a file to load from.
-			<input type="file" id="loadTasksInput" onchange="tolocalStorageJSONtasks();a = displayJSONtasks(); if(a){document.getElementById('loadTasksDiv').style.display='none'}"
+			<input type="file" id="loadTasksInput"
+				onchange="tolocalStorageJSONtasks();a = displayJSONtasks(); if(a){document.getElementById('loadTasksDiv').style.display='none'}"
 				accept=".json">
+		</div>
+
+		<div id="addTaskDiv">
+			<form action="index.html" name="newTaskForm" onsubmit="{event.preventDefault();addTask()}">
+				<fieldset>
+					<legend> Task info</legend>
+					<label>Task name</label>
+					<input id="Task_title" name="TaskTitle" type="text" placeholder="Task name">
+					</input>
+
+					<br>
+
+					<label>Task initial date</label>
+					<input id="Task_init_date" name="TaskInitDate" type="datetime-local" min="2022-01-07T00:00">
+					<br>
+					<!-- TODO check if min of end date is later than init -->
+					<label>Task end date</label>
+					<input id="Task_end_date" name="TaskEndDate" type="datetime-local" min="2018-06-07T00:00">
+					<br>
+
+					<label>Description</label>
+
+
+					<!-- <input id="Description" name="Description" type="text" placeholder="Task description"> -->
+					<textarea name="description" id="Task_description"></textarea>
+
+
+					<br>
+					<label>Tags</label>
+					<input id="Task_tags" name="Tags" type="text" placeholder="Task tags">
+					<br>
+
+					<input type="submit" value="Add">
+				</fieldset>
+				<br>
+			<button onclick="document.getElementById('addTaskDiv').style.display='none'">X</button>
+			</form>
+
+
+		</div>
+
+
+		<div id="updateTaskDiv">
+			<form action="index.html" id="updateTaskForm" data-id="" onsubmit="{event.preventDefault();updateTask(this.getAttribute('data-id'))}">
+				<fieldset>
+					<legend> Task info</legend>
+					<label>Task name</label>
+					<input id="update_Task_title" name="TaskTitle" type="text" placeholder="" required>
+					</input>
+
+					<br>
+
+					<label>Task initial date</label>
+					<input id="update_Task_init_date" name="TaskInitDate" type="datetime-local" min="2022-01-07T00:00">
+					<br>
+					<!-- TODO check if min of end date is later than init -->
+					<label>Task end date</label>
+					<input id="update_Task_end_date" name="TaskEndDate" type="datetime-local" min="2018-06-07T00:00">
+					<br>
+
+					<label>Description</label>
+
+
+					<!-- <input id="Description" name="Description" type="text" placeholder="Task description"> -->
+					<textarea name="description" id="update_Task_description" placeholder=""></textarea>
+
+
+					<br>
+					<label>Tags</label>
+					<input id="update_Task_tags" name="Tags" type="text" placeholder="">
+					<br>
+
+					<input type="submit" value="Update">
+				</fieldset>
+				<br>
+			<button onclick="document.getElementById('updateTaskDiv').style.display='none'">X</button>
+			</form>
+
+
 		</div>
 
 	</main>
