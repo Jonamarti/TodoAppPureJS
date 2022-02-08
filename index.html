@@ -12,7 +12,7 @@
 	<!-- Links -->
 	<link rel="shortcut-icon" type="image/x-icon" href="favicon.ico">
 
-	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="./styles/light.css">
 
 	<noscript>This page needs JavaScript enabled to work</noscript>
 
@@ -26,7 +26,12 @@
 
 		<br>
 		<!-- <a href="newTask.html" class="w3-bar-item w3-button">Add new task</a> -->
+		<br>
+		<button onclick="parseToDownload()" > Download tasks </button>
+		<br>
 		<button id="openAddNewTaskButton" onclick="document.getElementById('addTaskDiv').style.display='block'"> Add new task </button>
+		<br>
+		
 	</div>
 
 
@@ -60,7 +65,7 @@
 		</div>
 
 		<div id="addTaskDiv">
-			<form action="index.html" name="newTaskForm" onsubmit="{event.preventDefault();addTask()}">
+			<form action="index.html" name="newTaskForm" onsubmit="{console.log('adding');event.preventDefault();addTask()}">
 				<fieldset>
 					<legend> Task info</legend>
 					<label>Task name</label>
@@ -92,8 +97,9 @@
 					<input type="submit" value="Add">
 				</fieldset>
 				<br>
-			<button onclick="document.getElementById('addTaskDiv').style.display='none'">X</button>
+			
 			</form>
+			<button class="closeForm" onclick="document.getElementById('addTaskDiv').style.display='none'">X</button>
 
 
 		</div>

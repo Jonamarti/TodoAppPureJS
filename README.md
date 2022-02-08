@@ -1,9 +1,10 @@
 # TodoAppPureJS
 
 Simple to do app with vanilla JS.
-100% client side, so loads and stores (TO FIX) tasks via a .json file.
+100% client side, loads and stores tasks via a .json file.
 
 
 TODO:
-fix store json file.
-refactor functions
+Fix date error when creating
+Attachments 
+Refactor functions
