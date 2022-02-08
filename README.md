@@ -5,6 +5,7 @@ Simple to do app with vanilla JS.
 
 
 TODO:
-Fix date error when creating
-Attachments 
-Refactor functions
+Fix date error in create form. 
+Attachments.
+Refactor functions.
+Refactor CSS reused code.
