@@ -3,14 +3,16 @@
 
 <head>
 	<title>To Do App</title>
+
 	<!-- Meta-->
 	<meta charset="UTF-8">
 	<meta name="description" content="To Do App in vanilla Javascript">
 	<meta name="keywords" content="HTML, CSS, JavaScript">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="script.js" type="text/javascript"></script>
+
 	<!-- Links -->
-	<link rel="shortcut-icon" type="image/x-icon" href="favicon.ico">
+	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 
 	<link rel="stylesheet" type="text/css" href="./styles/light.css">
 
@@ -22,16 +24,15 @@
 
 	<!-- Sidebar -->
 	<div class="sidebar" style="display:none;z-index:5" id="mySidebar">
-		<button class="w3-bar-item w3-button w3-xxlarge" onclick="sidebar_close()">Close &times;</button>
+		<div>
+			<button class="w3-bar-item w3-button w3-xxlarge" onclick="sidebar_close()">Close &times;</button>
 
-		<br>
-		<!-- <a href="newTask.html" class="w3-bar-item w3-button">Add new task</a> -->
-		<br>
-		<button onclick="parseToDownload()" > Download tasks </button>
-		<br>
-		<button id="openAddNewTaskButton" onclick="document.getElementById('addTaskDiv').style.display='block'"> Add new task </button>
-		<br>
-		
+			<button onclick="parseToDownload()"> Download tasks </button>
+
+			<button id="openAddNewTaskButton" onclick="document.getElementById('addTaskDiv').style.display='block'"> Add
+				new task </button>
+			
+		</div>
 	</div>
 
 
@@ -61,96 +62,79 @@
 			It seems you have no tasks loaded. Please select a file to load from.
 			<input type="file" id="loadTasksInput"
 				onchange="tolocalStorageJSONtasks();a = displayJSONtasks(); if(a){document.getElementById('loadTasksDiv').style.display='none'}"
-				accept=".json">
+				accept=".json"
+			>
 		</div>
 
 		<div id="addTaskDiv">
-			<form action="index.html" name="newTaskForm" onsubmit="{console.log('adding');event.preventDefault();addTask()}">
+
+			<form action="index.html" name="newTaskForm"
+				onsubmit="{console.log('adding');event.preventDefault();addTask()}">
 				<fieldset>
 					<legend> Task info</legend>
 					<label>Task name</label>
 					<input id="Task_title" name="TaskTitle" type="text" placeholder="Task name">
 					</input>
 
-					<br>
-
 					<label>Task initial date</label>
 					<input id="Task_init_date" name="TaskInitDate" type="datetime-local" min="2022-01-07T00:00">
-					<br>
-					<!-- TODO check if min of end date is later than init -->
+
 					<label>Task end date</label>
 					<input id="Task_end_date" name="TaskEndDate" type="datetime-local" min="2018-06-07T00:00">
-					<br>
 
 					<label>Description</label>
 
-
-					<!-- <input id="Description" name="Description" type="text" placeholder="Task description"> -->
 					<textarea name="description" id="Task_description"></textarea>
 
-
-					<br>
 					<label>Tags</label>
 					<input id="Task_tags" name="Tags" type="text" placeholder="Task tags">
-					<br>
 
-					<input type="submit" value="Add">
+					<div style="display:flex; flex-direction:row">
+						<input type="submit" value="Add" style="background:lightgreen; color:black">
+						<input type="reset" value="Reset" style="background:orangered; color:white">
+					</div>
 				</fieldset>
-				<br>
-			
-			</form>
-			<button class="closeForm" onclick="document.getElementById('addTaskDiv').style.display='none'">X</button>
 
+
+			</form>
+			<button class="closeFormButt" onclick="document.getElementById('addTaskDiv').style.display='none'">X</button>
 
 		</div>
 
-
 		<div id="updateTaskDiv">
-			<form action="index.html" id="updateTaskForm" data-id="" onsubmit="{event.preventDefault();updateTask(this.getAttribute('data-id'))}">
+			<form action="index.html" id="updateTaskForm" data-id=""
+				onsubmit="{event.preventDefault();updateTask(this.getAttribute('data-id'))}">
 				<fieldset>
 					<legend> Task info</legend>
 					<label>Task name</label>
+
 					<input id="update_Task_title" name="TaskTitle" type="text" placeholder="" required>
 					</input>
 
-					<br>
-
 					<label>Task initial date</label>
 					<input id="update_Task_init_date" name="TaskInitDate" type="datetime-local" min="2022-01-07T00:00">
-					<br>
-					<!-- TODO check if min of end date is later than init -->
+
 					<label>Task end date</label>
 					<input id="update_Task_end_date" name="TaskEndDate" type="datetime-local" min="2018-06-07T00:00">
-					<br>
+
 
 					<label>Description</label>
-
-
-					<!-- <input id="Description" name="Description" type="text" placeholder="Task description"> -->
+					
 					<textarea name="description" id="update_Task_description" placeholder=""></textarea>
 
-
-					<br>
 					<label>Tags</label>
 					<input id="update_Task_tags" name="Tags" type="text" placeholder="">
-					<br>
 
 					<input type="submit" value="Update">
 				</fieldset>
-				<br>
-			<button onclick="document.getElementById('updateTaskDiv').style.display='none'">X</button>
-			</form>
 
+				<button class="closeFormButt" onclick="document.getElementById('updateTaskDiv').style.display='none'">X</button>
+			</form>
 
 		</div>
 
 	</main>
 
-
-	<!--- Footer -->
-	<footer>
-
-	</footer>
 </body>
 
 </html>
